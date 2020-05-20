@@ -72,7 +72,7 @@ double last_client_stop_time;
 
 
 
-int terminalsNumPerSchedule = 500;
+int terminalsNumPerSchedule = 200;
 static Ptr<OutputStreamWrapper> incomePacketTraceStream;
 static Ptr<OutputStreamWrapper> outcomePacketTraceStream;
 
@@ -172,7 +172,7 @@ incomePacketTracer (std::string context, Ptr<const Packet> packet)
                                    << iph.GetSource () << ","
                                    << iph.GetDestination () << ","
                                    << incomePort << ","
-                                   << Simulator::Now ().GetNanoSeconds () << std::endl; 
+                                   << Simulator::Now ().GetMicroSeconds () << std::endl; 
   }
 }
 
@@ -245,7 +245,7 @@ outcomePacketTracer (std::string context, Ptr<const Packet> packet)
                                    << iph.GetSource () << ","
                                    << iph.GetDestination () << ","
                                    << outcomePort << ","
-                                   << Simulator::Now ().GetNanoSeconds () << std::endl; 
+                                   << Simulator::Now ().GetMicroSeconds () << std::endl; 
   }
 }
 
@@ -303,14 +303,14 @@ BuildApps (NodeContainer terminals, NodeContainer servers,
   OnOffHelper clientHelperTcp ("ns3::TcpSocketFactory", Address ());
   clientHelperTcp.SetAttribute ("OnTime", StringValue ("ns3::ConstantRandomVariable[Constant=1]"));
   clientHelperTcp.SetAttribute ("OffTime", StringValue ("ns3::ConstantRandomVariable[Constant=0]"));
-  clientHelperTcp.SetAttribute ("PacketSize", UintegerValue (800));
+  clientHelperTcp.SetAttribute ("PacketSize", UintegerValue (1400));
   clientHelperTcp.SetAttribute ("DataRate", DataRateValue (DataRate ("1Mb/s")));
 
   // Connection two
   OnOffHelper clientHelperUdp ("ns3::UdpSocketFactory", Address ());
   clientHelperUdp.SetAttribute ("OnTime", StringValue ("ns3::ConstantRandomVariable[Constant=1]"));
   clientHelperUdp.SetAttribute ("OffTime", StringValue ("ns3::ConstantRandomVariable[Constant=0]"));
-  clientHelperUdp.SetAttribute ("PacketSize", UintegerValue (800));
+  clientHelperUdp.SetAttribute ("PacketSize", UintegerValue (1400));
   clientHelperUdp.SetAttribute ("DataRate", DataRateValue (DataRate ("1Mb/s")));
 
   ApplicationContainer clientAppsTcp[terminalsNumPerSchedule];
@@ -326,7 +326,7 @@ BuildApps (NodeContainer terminals, NodeContainer servers,
   uint32_t stop_time = 0;
   for (uint32_t i = 0; i < terminals.GetN (); i++)
    {
-     uint32_t durationTimeNum = i % 20 + 1;
+     uint32_t durationTimeNum = i % 10 + 1;
      start_time = first_client_start_time + i * miniFlowDurationTime;
      stop_time = start_time + durationTimeNum * miniFlowDurationTime;
      if (start_time > global_stop_time)
@@ -391,7 +391,7 @@ main (int argc, char *argv[])
   global_start_time = 0.0;
   sink_start_time = global_start_time;
   first_client_start_time = 0;
-  global_stop_time = 500.0;
+  global_stop_time = 200.0;
   sink_stop_time = global_stop_time;
   last_client_stop_time = global_stop_time;
 
