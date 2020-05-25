@@ -42,6 +42,7 @@ NS_LOG_COMPONENT_DEFINE ("MyFifoQueueDisc");
 NS_OBJECT_ENSURE_REGISTERED (MyFifoQueueDisc);
 
 static std::ofstream fifoStream;
+static int x_fifo;
 
 TypeId MyFifoQueueDisc::GetTypeId (void)
 {
@@ -77,6 +78,8 @@ bool
 MyFifoQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
 {
   NS_LOG_FUNCTION (this << item);
+
+  x_fifo = Simulator::Now ().GetMilliSeconds () / 1500;
 
   if (GetCurrentSize () + item > GetMaxSize ())
     {
@@ -120,7 +123,10 @@ MyFifoQueueDisc::DoDequeue (void)
             if (packet->FindFirstMatchingByteTag (tag))
             {
               std::cout << "FIFO," << "0," << "-1,"
-                        << (uint64_t) tag.GetUniquePacketId () << std::endl;
+                        << (uint64_t) tag.GetUniquePacketId () << ","
+                        << "-1," << "-1," << "-1," << "-1," 
+                        << "-1," << "-1," << "-1," << "-1," 
+                        << "20," << "2," << x_fifo << std::endl;
               std::cout.flush();
                         
             }

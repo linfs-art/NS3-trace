@@ -48,6 +48,7 @@ NS_LOG_COMPONENT_DEFINE ("FqCoDelQueueDisc");
 NS_OBJECT_ENSURE_REGISTERED (FqCoDelFlow);
 
 std::ofstream drrStream;
+static int x_drr;
 
 static int random_fq(int min, int max) //range : [min, max)
 {
@@ -187,7 +188,7 @@ FqCoDelQueueDisc::FqCoDelQueueDisc ()
       //       << "PacketUid," << "PacketId" << std::endl;
   for (int i=0; i < 100; i++)
   {
-    m_quantumArray[i] = random_fq (128, 2048);
+    m_quantumArray[i] = random_fq (128, 4096);
     // std::cout << m_quantumArray[i] << std::endl;
   }
 }
@@ -215,8 +216,8 @@ FqCoDelQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
 {
   NS_LOG_FUNCTION (this << item);
 
-  int x = Simulator::Now ().GetMilliSeconds () / 2000;
-  SetQuantum (m_quantumArray[x]);
+  x_drr = Simulator::Now ().GetMilliSeconds () / 1500;
+  SetQuantum (m_quantumArray[x_drr]);
 // std::cout << "x is: " << x << std::endl;
   uint32_t h = 0;
 
@@ -361,7 +362,10 @@ FqCoDelQueueDisc::DoDequeue (void)
             if (packet->FindFirstMatchingByteTag (tag))
             {
               std::cout << "Drr," << fid << "," << m_quantum <<","
-                        << (uint64_t) tag.GetUniquePacketId () << std::endl;
+                        << (uint64_t) tag.GetUniquePacketId () << ","
+                        << "1," << "1," << "1," << "1," 
+                        << "1," << "1," << "1," << "1," 
+                        << "20," << "2," << x_drr << std::endl;
               std::cout.flush();
                         
             }

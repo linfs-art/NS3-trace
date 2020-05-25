@@ -46,6 +46,7 @@ NS_OBJECT_ENSURE_REGISTERED (PrioQueueDisc);
 ATTRIBUTE_HELPER_CPP (Priomap);
 
 std::ofstream prioStream;
+static int x_sp;
 
 std::ostream &
 operator << (std::ostream &os, const Priomap &priomap)
@@ -123,6 +124,8 @@ bool
 PrioQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
 {
   NS_LOG_FUNCTION (this << item);
+
+  x_sp = Simulator::Now ().GetMilliSeconds () / 1500;
 
   uint32_t band = m_prio2band[0];
 
@@ -205,7 +208,10 @@ PrioQueueDisc::DoDequeue (void)
             if (packet->FindFirstMatchingByteTag (tag))
             {
               std::cout << "SP," << i << "," << "-1,"
-                        << (uint64_t) tag.GetUniquePacketId () << std::endl;
+                        << (uint64_t) tag.GetUniquePacketId () << ","
+                        << "-1," << "-1," << "-1," << "-1," 
+                        << "-1," << "-1," << "-1," << "-1," 
+                        << "20," << "2," << x_sp << std::endl;
               std::cout.flush();
                         
             }

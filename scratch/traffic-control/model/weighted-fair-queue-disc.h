@@ -139,6 +139,7 @@ public:
   std::map<uint32_t, uint32_t> m_quantumMap;
 
   uint32_t m_quantumMapArray[100][8];
+  uint32_t m_quantumMapSum;
 
 private:
   virtual bool DoEnqueue (Ptr<QueueDiscItem> item);

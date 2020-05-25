@@ -48,7 +48,7 @@ NS_OBJECT_ENSURE_REGISTERED (FqCoDelFlow2);
 
 // static Ptr<OutputStreamWrapper> wfqTraceStream = asciiWfq.CreateFileStream ("/home/guolab/LFS/NS3/traffic-trace-wfq.csv");
 std::ofstream wfqStream;
-
+static int x_wfq;
 
 static int random_wfq(int min, int max) //range : [min, max)
 {
@@ -197,7 +197,7 @@ WfqDisc::WfqDisc ()
   {
     for (int j = 0; j < 8; j++)
     {
-      m_quantumMapArray[i][j] = random_wfq (256, 2048);
+      m_quantumMapArray[i][j] = random_wfq (128, 4096);
     }
   }
 
@@ -235,10 +235,12 @@ WfqDisc::DoEnqueue (Ptr<QueueDiscItem> item)
 {
   NS_LOG_FUNCTION (this << item);
 
-  int x = Simulator::Now ().GetMilliSeconds () / 2000;
+  x_wfq = Simulator::Now ().GetMilliSeconds () / 1500;
+  m_quantumMapSum = 0;
   for (int i = 0; i < 8; i++)
   {
-    m_quantumMap[i] = m_quantumMapArray[x][i];
+    m_quantumMap[i] = m_quantumMapArray[x_wfq][i];
+    m_quantumMapSum = m_quantumMapSum + m_quantumMap[i];
   }
 
   uint32_t h = 0;
@@ -396,7 +398,16 @@ WfqDisc::DoDequeue (void)
             if (packet->FindFirstMatchingByteTag (tag))
             {
               std::cout << "WFQ," << fid << "," << m_quantumMap[fid] << ","
-                        << (uint64_t) tag.GetUniquePacketId () << std::endl;
+                        << (uint64_t) tag.GetUniquePacketId () << ","
+                        << (float) m_quantumMap[0] / m_quantumMapSum << ","
+                        << (float) m_quantumMap[1] / m_quantumMapSum << ","
+                        << (float) m_quantumMap[2] / m_quantumMapSum << ","
+                        << (float) m_quantumMap[3] / m_quantumMapSum << ","
+                        << (float) m_quantumMap[4] / m_quantumMapSum << ","
+                        << (float) m_quantumMap[5] / m_quantumMapSum << ","
+                        << (float) m_quantumMap[6] / m_quantumMapSum << ","
+                        << (float) m_quantumMap[7] / m_quantumMapSum << ","
+                        << "20," << "2," << x_wfq << std::endl;
               std::cout.flush();
                         
             }
