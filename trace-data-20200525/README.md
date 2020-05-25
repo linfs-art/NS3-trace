@@ -7,7 +7,7 @@
 
 ### 2. Setup
 
-***Note:*** 共设置了10个不同的forward matrix, 每个forward matrix下有10条trace, 每条trace的DRR quantum、WFQ weight随机变化, 各不相同。
+***Note:*** (单节点trace) 共设置了10个不同的forward matrix, 每个forward matrix下有10条trace, 每条trace的DRR quantum、WFQ weight随机变化, 各不相同, 每条trace有10K个time unit左右(非严格10K, 有上下微小波动)。
 
 1. 客户端发送速率固定为: 1 Mb/s, 数据包大小固定为：1400 B;
 
