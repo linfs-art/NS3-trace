@@ -7,9 +7,11 @@
 
 ### 2. Setup
 
+***Note:*** 共设置了10个不同的forward matrix, 每个forward matrix下有10条trace, 每条trace的DRR quantum、WFQ weight随机变化, 各不相同。
+
 1. 客户端发送速率固定为: 1 Mb/s, 数据包大小固定为：1400 B;
 
-2. 实验设置了多条不同的UDP/TCP flow (100+), 每条flow的持续时间从1秒-10秒不等;
+2. 实验设置了多条不同的UDP/TCP flow (100+);
 
 3. 根据5元组的不同, 不同的flow会被随机分到不同的优先级队列中;
 
