@@ -216,7 +216,7 @@ FqCoDelQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
 {
   NS_LOG_FUNCTION (this << item);
 
-  x_drr = Simulator::Now ().GetMilliSeconds () / 1500;
+  x_drr = Simulator::Now ().GetMilliSeconds () / 1600;
   SetQuantum (m_quantumArray[x_drr]);
 // std::cout << "x is: " << x << std::endl;
   uint32_t h = 0;

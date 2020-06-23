@@ -327,20 +327,23 @@ BuildAppsClient (NodeContainer terminals, std::string serverIp, uint32_t miniFlo
    * Create the OnOff applications to send TCP to the server
    * onoffhelper is a client that send data to TCP destination
   */
+  Ptr<UniformRandomVariable> uv = CreateObject<UniformRandomVariable> ();
+  uint32_t uniform_value = uv->GetValue (1, 15);
+  std::string data_rate = std::to_string (uniform_value) + "Mb/s";
+
   uint16_t tcpPort = 6666;
   uint16_t udpPort = 8888;
   OnOffHelper clientHelperTcp ("ns3::TcpSocketFactory", Address ());
   clientHelperTcp.SetAttribute ("OnTime", StringValue ("ns3::ConstantRandomVariable[Constant=1]"));
   clientHelperTcp.SetAttribute ("OffTime", StringValue ("ns3::ConstantRandomVariable[Constant=0]"));
   clientHelperTcp.SetAttribute ("PacketSize", UintegerValue (1400));
-  clientHelperTcp.SetAttribute ("DataRate", DataRateValue (DataRate ("1Mb/s")));
-
+  clientHelperTcp.SetAttribute ("DataRate", DataRateValue (DataRate (data_rate)));
   // Connection two
   OnOffHelper clientHelperUdp ("ns3::UdpSocketFactory", Address ());
   clientHelperUdp.SetAttribute ("OnTime", StringValue ("ns3::ConstantRandomVariable[Constant=1]"));
   clientHelperUdp.SetAttribute ("OffTime", StringValue ("ns3::ConstantRandomVariable[Constant=0]"));
   clientHelperUdp.SetAttribute ("PacketSize", UintegerValue (1400));
-  clientHelperUdp.SetAttribute ("DataRate", DataRateValue (DataRate ("1Mb/s")));
+  clientHelperUdp.SetAttribute ("DataRate", DataRateValue (DataRate (data_rate)));
 
   ApplicationContainer clientAppsTcp[terminalsNumPerSchedule];
   AddressValue remoteAddressTcp (InetSocketAddress (Ipv4Address (serverIp.c_str ()), tcpPort));
@@ -349,7 +352,6 @@ BuildAppsClient (NodeContainer terminals, std::string serverIp, uint32_t miniFlo
   ApplicationContainer clientAppsUdp[terminalsNumPerSchedule];
   AddressValue remoteAddressUdp (InetSocketAddress (Ipv4Address (serverIp.c_str ()), udpPort));
   clientHelperUdp.SetAttribute ("Remote", remoteAddressUdp);
-
   // uint32_t start_time = 0;
   // uint32_t stop_time = 0;
   for (uint32_t i = 0; i < terminals.GetN (); i++)
@@ -362,15 +364,18 @@ BuildAppsClient (NodeContainer terminals, std::string serverIp, uint32_t miniFlo
      //  start_time = global_stop_time - 10;
      //  stop_time = global_stop_time;
      // }
+
      if (i % 2 == TCPAPP)  
      {
       // std::cout << "Sum: " << terminals.GetN () << "  i:  " << i << std::endl;
       // // std::cout << "tcp app start time: " << first_client_start_time + i * miniFlowDurationTime << std::endl;
+
        clientAppsTcp[i].Add (clientHelperTcp.Install (terminals.Get (i)));
        // clientAppsTcp[i].Start (Seconds (first_client_start_time + i * miniFlowDurationTime));
        // clientAppsTcp[i].Stop (Seconds (first_client_start_time + durationTimeNum * miniFlowDurationTime));
 
           clientAppsTcp[i].Start (Seconds (global_start_time));
+
           clientAppsTcp[i].Stop (Seconds (global_stop_time));
      }
      else if ( i % 2 == UDPAPP)
@@ -412,7 +417,7 @@ main (int argc, char *argv[])
 
   set_start_time ();
 
-  freopen("/home/guolab/LFS/NS3/traffic-trace-queues.csv", "w", stdout);
+  freopen("/home/guolab/LFS/NS3/traffic-schedule-data-20200623/forward-matrix-10/traffic-trace-queues.csv", "w", stdout);
   std::cout << "Type," << "Queue," << "Quantum,"
             << "PacketUid," << "w1," << "w2," << "w3,"
             << "w4," << "w5," << "w6," << "w7," << "w8,"
@@ -423,7 +428,7 @@ main (int argc, char *argv[])
   global_start_time = 0.0;
   sink_start_time = global_start_time;
   first_client_start_time = 0;
-  global_stop_time = 15.1;
+  global_stop_time = 16.0;
   sink_stop_time = global_stop_time;
   last_client_stop_time = global_stop_time;
 
@@ -836,8 +841,8 @@ main (int argc, char *argv[])
 // std::cout << "4" << std::endl;
 
   AsciiTraceHelper ascii;
-  incomePacketTraceStream = ascii.CreateFileStream ("/home/guolab/LFS/NS3/traffic-schedule-income.csv");
-  outcomePacketTraceStream = ascii.CreateFileStream ("/home/guolab/LFS/NS3/traffic-schedule-outcome.csv");
+  incomePacketTraceStream = ascii.CreateFileStream ("/home/guolab/LFS/NS3/traffic-schedule-data-20200623/forward-matrix-10/traffic-schedule-income.csv");
+  outcomePacketTraceStream = ascii.CreateFileStream ("/home/guolab/LFS/NS3/traffic-schedule-data-20200623/forward-matrix-10/traffic-schedule-outcome.csv");
 
   *incomePacketTraceStream->GetStream () << "PacketUid" << ","
                         << "PacketSize" << ","

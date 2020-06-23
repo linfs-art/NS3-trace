@@ -235,7 +235,7 @@ WfqDisc::DoEnqueue (Ptr<QueueDiscItem> item)
 {
   NS_LOG_FUNCTION (this << item);
 
-  x_wfq = Simulator::Now ().GetMilliSeconds () / 1500;
+  x_wfq = Simulator::Now ().GetMilliSeconds () / 1600;
   m_quantumMapSum = 0;
   for (int i = 0; i < 8; i++)
   {
